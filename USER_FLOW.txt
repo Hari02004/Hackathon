@@ -1,0 +1,596 @@
+================================================================================
+                   UNIVERSITY CAMPUS MANAGEMENT SYSTEM
+                              USER FLOW DOCUMENT
+================================================================================
+
+================================================================================
+1. STUDENT USER FLOW
+================================================================================
+
+Landing Page (Home)
+    ↓
+Browse Content
+├── Academics → Courses & Programs
+├── Research → Research Papers
+├── Campus Life → 3D Virtual Tour
+├── Alumni → Network & Connections
+├── Events → View Events
+├── News → Latest Updates
+└── Admissions → Apply Info
+    ↓
+Authentication
+├── Login (student@university.edu)
+│   └── Stored in localStorage
+└── Or Register (Sign Up)
+    ↓
+Student Dashboard (Profile Page)
+├── View Profile
+│   ├── Name, Email, Phone (editable)
+│   ├── Department, Batch, Hostel
+│   └── Inspirational Quote Display
+├── Edit Profile (Name & Phone only)
+└── View Registrations
+    ↓
+Events Page
+├── View All Events
+├── Filter by Category (Technical, Academic, etc.)
+├── Filter by Status (Upcoming, Ongoing, Past)
+├── View Featured Events
+├── View Event Calendar
+└── Click "Explore More" → Event Details Modal
+    ↓
+Event Registration Modal
+├── Auto-filled Fields (Name, Email, Department)
+├── Editable Fields (Phone, Year, Semester, Admission #)
+├── Click "Register Now"
+└── Success Message → Confirmation Email
+    ↓
+Registered Events
+├── View in Profile → My Registrations
+├── Status: "Already Registered"
+├── Cannot Register Twice
+└── Receive Event Reminders
+
+================================================================================
+2. ADMIN USER FLOW
+================================================================================
+
+Landing Page
+    ↓
+Login (Admin Credentials)
+├── Email: ADM0000
+└── Password: [Admin Password]
+    ↓
+Stored in localStorage with role: 'admin'
+    ↓
+Admin Dashboard
+├── Overview Stats
+│   ├── Total Users
+│   ├── Total Events
+│   ├── Total Registrations
+│   └── Campus Facilities
+│
+├── User Management
+│   ├── View All Students
+│   ├── View Profile Data
+│   ├── Manage Permissions
+│   └── Export User List
+│
+├── Event Management
+│   ├── Create New Event
+│   ├── Edit Existing Events
+│   ├── Delete Events
+│   ├── View Registrations
+│   ├── Mark Attendance
+│   └── Export Registration Data
+│
+├── Campus Facilities
+│   ├── Update Hostel Info
+│   ├── Update Sports Complex
+│   ├── Update Library Status
+│   └── Update Cultural Center
+│
+└── Settings
+    ├── Email Configuration
+    ├── System Preferences
+    └── User Roles & Permissions
+
+================================================================================
+3. ALUMNI USER FLOW
+================================================================================
+
+Landing Page
+    ↓
+Browse Alumni Page
+├── View Alumni Network
+├── Global Map
+├── Success Stories
+├── Alumni Benefits
+└── Click "Explore Events" → Routes to Events Page
+    ↓
+Events Page
+├── View Upcoming Events
+├── Can Register if Logged In
+└── Network with Other Alumni
+    ↓
+Optional: Login/Register
+    ↓
+Alumni Registration
+├── Register for Alumni Events
+├── Connect with Batch Mates
+└── Attend Reunions
+
+================================================================================
+4. MAIN PAGE NAVIGATION FLOW
+================================================================================
+
+Navbar (Available on All Pages)
+├── Logo → Home
+├── Academics
+├── Research
+├── Campus Life
+├── Alumni
+├── Events
+├── News
+├── Admissions
+├── Profile (if logged in)
+├── Admin Dashboard (if admin)
+└── Login/Logout Button
+
+================================================================================
+5. CAMPUS LIFE PAGE FLOW
+================================================================================
+
+Hero Section (3D Animation)
+    ↓
+Campus Highlights (4 Cards)
+├── Student Residences
+├── Sports & Fitness
+├── Digital Library
+└── Performing Arts
+    ↓
+Explore Campus Facilities
+├── Student Residences Card
+│   └── Hover 3D Effect
+│   └── Click "Explore More" → Detailed Modal
+│       ├── View Images
+│       ├── Read Features
+│       ├── View Amenities
+│       └── "Schedule Visit" Button
+│
+├── Sports Complex
+│   └── Similar to above
+│
+├── Digital Library
+│   └── Similar to above
+│
+└── Performing Arts
+    └── Similar to above
+    ↓
+View Campus Statistics
+├── 50 Acres Campus
+├── 10,000+ Students
+├── 24/7 Security
+└── 100+ Facilities
+    ↓
+View Campus Gallery
+├── Scrollable Images
+├── Hover Zoom Effects
+└── Image Titles
+    ↓
+Student Testimonials
+├── Carousel Cards
+├── Student Quotes
+├── Ratings
+└── Batch Year
+
+================================================================================
+6. EVENTS PAGE FLOW
+================================================================================
+
+Hero Section
+    ↓
+Event Tabs
+├── Upcoming Events (Default)
+├── Ongoing Events
+└── Past Events
+    ↓
+Category Filter
+├── All
+├── Technical
+├── Academic
+├── Cultural
+├── Sports
+├── Workshop
+├── Entrepreneurship
+└── Career
+    ↓
+Featured Events Section
+├── Top 2 Upcoming Events
+├── Hero Style Display
+└── Quick Info
+    ↓
+Events Grid (2 Columns on Desktop)
+├── Event Card
+│   ├── Image
+│   ├── Title
+│   ├── Category
+│   ├── Date, Time, Venue
+│   ├── Amenities
+│   ├── Stats
+│   └── "Explore More" Button → Modal
+│       ├── Full Description
+│       ├── Key Features (8 items)
+│       ├── Amenities (5 items)
+│       ├── Why This Space Matters
+│       └── Schedule Visit Button
+│
+└── Repeat for all events
+    ↓
+Call to Action Section
+├── "Organize Your Event" Box
+├── Submit Event Proposal Button
+└── Contact Events Team Button
+    ↓
+Newsletter Signup
+├── Email Input
+└── Subscribe Button
+    ↓
+View Full Calendar
+├── Monthly Calendar View
+├── Events on Calendar
+├── Navigate Months
+└── Go to Today Button
+
+================================================================================
+7. PROFILE PAGE FLOW
+================================================================================
+
+Hero Section (User Info)
+├── Profile Picture
+├── Name (editable)
+├── Role Badge (Student/Admin)
+└── Inspirational Quote (Red Gradient)
+    ↓
+Profile Sections
+├── Academic Information (Read-only)
+│   ├── Email
+│   ├── Department
+│   ├── Batch
+│   └── Admission Number
+│
+├── Personal Information (Editable)
+│   ├── Name ✏️
+│   └── Phone ✏️
+│
+├── Hostel Information
+│   ├── Hostel Name
+│   ├── Room Number
+│   └── Block
+│
+└── My Registrations
+    ├── Registered Events List
+    ├── Event Details
+    └── Status (Pending/Attended)
+    ↓
+Save Changes Button
+    ↓
+Update localStorage
+    ↓
+Success Message
+
+================================================================================
+8. AUTHENTICATION FLOW
+================================================================================
+
+Login Modal (From Navbar)
+├── Email Input
+├── Password Input
+├── Remember Me Checkbox
+├── Login Button
+└── Sign Up Link
+    ↓
+Validation
+├── Email Format Check
+├── Password Length Check
+└── Required Fields Check
+    ↓
+Backend Authentication
+├── Find User by Email
+├── Verify Password (bcryptjs)
+├── Generate JWT Token
+└── Return User Data + Token
+    ↓
+Frontend Storage
+├── Save to localStorage:
+│   ├── currentUser (object)
+│   ├── userToken (JWT)
+│   └── userRole (student/admin)
+│
+└── Redirect to Profile Page
+    ↓
+Session Persistence
+├── Check localStorage on Page Load
+├── Auto-login if token exists
+└── Update Navbar with User Info
+
+================================================================================
+9. EVENT REGISTRATION FLOW
+================================================================================
+
+1. User Views Events
+    ↓
+2. Clicks "Explore More" on Event
+    ↓
+3. Event Details Modal Opens
+    ↓
+4. Clicks "Register Now" Button
+    ↓
+5. Registration Modal Opens
+    ├── Auto-filled Fields
+    │   ├── Name (from profile)
+    │   ├── Email (from profile)
+    │   ├── Phone (editable)
+    │   └── Department (from profile)
+    │
+    └── Editable Fields
+        ├── Year (dropdown)
+        ├── Semester (text)
+        └── Admission # (text)
+    ↓
+6. User Fills/Edits Details
+    ↓
+7. Clicks "Register Now" Button
+    ├── Validation
+    │   ├── Name required ✓
+    │   ├── Email required ✓
+    │   └── Phone required ✓
+    │
+    └── Check if Already Registered
+    ↓
+8. API Call to Backend
+    POST /api/event-registrations/register
+    ├── Body: eventId, name, email, phone, etc.
+    └── Response: success/error
+    ↓
+9. Backend Processing
+    ├── Check Event Exists
+    ├── Check Duplicate Registration
+    ├── Create Registration Record
+    ├── Send Confirmation Email
+    └── Return Success
+    ↓
+10. Frontend Success
+    ├── Show "✅ Successfully Registered"
+    ├── Add to User Registrations
+    ├── Disable "Register Now" Button
+    ├── Show "✅ Registered" Button
+    └── Auto-close Modal after 2.5s
+    ↓
+11. User Can View Registration
+    ├── In Profile Page
+    ├── In My Registrations Section
+    └── Status: Pending/Attended
+
+================================================================================
+10. RESPONSIVE DESIGN FLOW
+================================================================================
+
+Desktop (1024px+)
+├── Full Navigation Bar
+├── 2-Column Layouts
+├── Full-Size Images
+└── All Features Visible
+
+Tablet (768px - 1023px)
+├── Hamburger Menu (optional)
+├── 2-Column on Large Tablets
+├── 1-Column on Small Tablets
+└── Touch-Friendly Buttons
+
+Mobile (< 768px)
+├── Hamburger Menu (required)
+├── 1-Column Layout
+├── Scrollable Content
+├── Touch-Optimized (44px+ buttons)
+└── Full-Screen Modals
+
+================================================================================
+KEY FEATURES SUMMARY TABLE
+================================================================================
+
+Feature                  | User          | Page       | Action
+-------------------------|---------------|------------|----------------------------------
+View Profile             | Student/Admin | Profile    | Auto-loaded
+Edit Profile             | Student       | Profile    | Click Edit, Save
+Register Event           | Student/Alumni| Events     | Modal → Register
+Create Event             | Admin         | Dashboard  | Form → Submit
+View Campus              | All           | Campus Life| Click Explore
+Check Attendance         | Admin         | Dashboard  | Mark Attended
+View Stats               | Admin         | Dashboard  | Overview
+Download Data            | Admin         | Dashboard  | Export CSV
+View Calendar            | All           | Events     | Click View Calendar
+Filter Events            | All           | Events     | Select Category/Status
+View Event Details       | All           | Events     | Click "Explore More"
+Schedule Visit           | All           | Campus Life| Click "Schedule Visit"
+View Testimonials        | All           | Campus Life| Auto-carousel
+Browse News              | All           | News       | Click News
+Apply for Admission      | Guest         | Admissions | Fill Form
+Network with Alumni      | Alumni        | Alumni     | Browse Network
+View Research            | All           | Research   | View Papers
+
+================================================================================
+TECHNICAL STACK
+================================================================================
+
+Frontend:
+├── React 19.2.0
+├── Vite 7.2.2
+├── Tailwind CSS 4.1.17
+├── React Router DOM v6
+└── Modern JavaScript (ES6+)
+
+Backend:
+├── Express.js 4.18.2
+├── MongoDB Atlas
+├── Mongoose 7.6.3
+├── JWT Authentication
+├── bcryptjs (Password Hashing)
+└── Nodemailer (Email Service)
+
+Database Collections:
+├── Users (students & admins)
+├── Events
+├── EventRegistrations
+├── News
+├── Admissions
+└── Campus Facilities
+
+================================================================================
+AUTHENTICATION CREDENTIALS (DEMO)
+================================================================================
+
+Student Login:
+├── Email: student@university.edu
+└── Password: student123
+
+Admin Login:
+├── Email: ADM0000
+└── Password: admin123
+
+Note: Use proper credentials for production
+
+================================================================================
+KEY PAGES & ROUTES
+================================================================================
+
+Public Routes:
+├── / → Home
+├── /academics → Academics
+├── /research → Research
+├── /campus-life → Campus Life
+├── /alumni → Alumni
+├── /events → Events
+├── /news → News
+└── /admissions → Admissions
+
+Protected Routes (Logged In):
+├── /profile → User Profile
+└── /admin → Admin Dashboard (Admin Only)
+
+================================================================================
+ERROR HANDLING & MESSAGES
+================================================================================
+
+Success Messages:
+├── "✅ Profile Updated Successfully"
+├── "✅ Successfully Registered!"
+└── "✅ Event Created Successfully"
+
+Error Messages:
+├── "❌ Please fill in all required fields"
+├── "❌ You are already registered for this event"
+├── "❌ Cannot connect to server"
+└── "❌ Invalid credentials"
+
+Loading States:
+├── "Loading Events..."
+├── "⏳ Registering..."
+└── "Processing your request..."
+
+================================================================================
+PERFORMANCE CONSIDERATIONS
+================================================================================
+
+Frontend Optimization:
+├── Lazy Loading for Images
+├── Code Splitting with React Router
+├── Memoization for Components
+├── LocalStorage for Session Management
+└── CSS Animations (GPU Accelerated)
+
+Backend Optimization:
+├── MongoDB Indexing (Date, Category, Status)
+├── Pagination for Large Datasets
+├── Caching Strategies
+├── Query Optimization
+└── Connection Pooling
+
+Mobile Optimization:
+├── Responsive Design (Mobile-First)
+├── Touch-Optimized UI (44px+ buttons)
+├── Reduced Image Sizes
+├── Lazy Loading
+└── Optimized API Calls
+
+================================================================================
+SECURITY FEATURES
+================================================================================
+
+Authentication:
+├── JWT Token-based
+├── bcryptjs Password Hashing (10 salt rounds)
+├── Session Management via localStorage
+└── Role-based Access Control
+
+Data Protection:
+├── HTTPS Encryption (Production)
+├── Input Validation (Frontend & Backend)
+├── SQL Injection Prevention
+├── XSS Protection
+└── CORS Configuration
+
+API Security:
+├── Protected Endpoints with authMiddleware
+├── Admin-only Routes with adminMiddleware
+├── Rate Limiting (Recommended)
+└── Request Validation
+
+================================================================================
+FUTURE ENHANCEMENTS
+================================================================================
+
+Phase 2:
+├── Mobile App (React Native)
+├── Push Notifications
+├── Real-time Chat
+├── Advanced Analytics Dashboard
+└── Video Tutorials
+
+Phase 3:
+├── AI-powered Event Recommendations
+├── Virtual Campus Tours (VR)
+├── Payment Gateway Integration
+├── Social Media Integration
+└── Advanced Reporting
+
+Phase 4:
+├── Offline Mode Support
+├── Progressive Web App (PWA)
+├── Machine Learning Models
+├── Blockchain Integration
+└── IoT Integration
+
+================================================================================
+SUPPORT & DOCUMENTATION
+================================================================================
+
+For Issues:
+├── Check Browser Console (F12)
+├── Review Network Tab
+├── Check Backend Logs
+└── Verify MongoDB Connection
+
+Documentation:
+├── README.md
+├── API Documentation
+├── Component Documentation
+├── Setup Guide
+└── Deployment Guide
+
+Contact:
+├── Email: support@university.edu
+├── Phone: +91-XXXX-XXXX-XXXX
+├── Portal: https://support.university.edu
+└── Discord: University Community
+
