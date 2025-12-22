@@ -21,9 +21,6 @@ import usersRoutes from './routes/users.js';
 // Initialize Express
 const app = express();
 
-// Connect to MongoDB
-connectDB();
-
 // Middleware
 app.use(helmet());
 app.use(morgan('combined'));
@@ -58,10 +55,23 @@ app.use('*', (req, res) => {
 // Error handler
 app.use(errorHandler);
 
-// Start server
+// Start server with MongoDB connection
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`📍 API: http://localhost:${PORT}`);
-  console.log(`🌐 Frontend: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
-});
+
+const startServer = async () => {
+  try {
+    console.log('⏳ Connecting to MongoDB...');
+    await connectDB();
+    
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`📍 API: http://localhost:${PORT}`);
+      console.log(`🌐 Frontend: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
