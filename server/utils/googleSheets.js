@@ -8,14 +8,21 @@ const sheets = google.sheets('v4');
 
 export const initializeGoogleSheets = async () => {
   try {
+    const keyFile = process.env.GOOGLE_SHEETS_KEY_FILE;
+    if (!keyFile) {
+      console.warn('⚠️  GOOGLE_SHEETS_KEY_FILE not set, Google Sheets disabled');
+      return null;
+    }
+
     const auth = new google.auth.GoogleAuth({
-      keyFile: process.env.GOOGLE_SHEETS_KEY_FILE,
+      keyFile: keyFile,
       scopes: ['https://www.googleapis.com/auth/spreadsheets']
     });
 
     return auth;
   } catch (error) {
-    console.error('Error initializing Google Sheets:', error.message);
+    console.error('❌ Error initializing Google Sheets:', error.message);
+    console.warn('⚠️  Google Sheets functionality disabled');
     return null;
   }
 };
