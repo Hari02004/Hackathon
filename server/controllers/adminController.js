@@ -346,11 +346,16 @@ export const deleteUser = async (req, res) => {
     console.log(`👤 User found: ${user.name} - Admission: ${user.admissionNumber}`);
 
     // Record in DeletedAdmission collection before hard delete
-    await DeletedAdmission.create({
-      admissionNumber: user.admissionNumber,
-      name: user.name,
-      reason: 'Deleted from pending approvals'
-    });
+    try {
+      await DeletedAdmission.create({
+        admissionNumber: user.admissionNumber,
+        name: user.name,
+        reason: 'Deleted from pending approvals'
+      });
+    } catch (dbError) {
+      console.warn(`⚠️ Could not record in DeletedAdmission (may already exist): ${dbError.message}`);
+      // Continue anyway - it's not critical if record already exists
+    }
 
     // Hard delete - remove from User collection
     await User.findByIdAndDelete(userId);

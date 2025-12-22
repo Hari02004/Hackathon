@@ -5,8 +5,7 @@ const deletedAdmissionSchema = new mongoose.Schema(
     admissionNumber: {
       type: String,
       required: true,
-      uppercase: true,
-      unique: true
+      uppercase: true
     },
     name: {
       type: String,
