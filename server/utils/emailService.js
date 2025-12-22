@@ -1,32 +1,22 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 
-// Create transporter using Gmail with STARTTLS
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // Use STARTTLS instead of TLS
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
-});
+// Initialize SendGrid with API key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// Don't verify on startup - just try to send
-console.log('📧 Email service configured for:', process.env.EMAIL_USER);
-console.log('⚠️  Email verification disabled - will attempt to send on demand');
+console.log('📧 Email service configured for SendGrid');
+console.log('📧 From email:', process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER);
 
 export const sendCredentialsEmail = async (email, name, admissionNumber, password) => {
   try {
-    console.log(`\n📧 SENDING EMAIL...`);
+    console.log(`\n📧 SENDING EMAIL VIA SENDGRID...`);
     console.log(`   To: ${email}`);
-    console.log(`   From: ${process.env.EMAIL_USER}`);
     console.log(`   Student: ${name}`);
     
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    const msg = {
       to: email,
+      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@knuniversity.com',
       subject: '🎓 Welcome to KNU - Your Account Credentials',
       html: `
         <!DOCTYPE html>
@@ -100,16 +90,12 @@ export const sendCredentialsEmail = async (email, name, admissionNumber, passwor
       `
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`\n✅ EMAIL SENT SUCCESSFULLY!`);
-    console.log(`   Message ID: ${info.messageId}`);
-    console.log(`   Response: ${info.response}`);
+    await sgMail.send(msg);
+    console.log(`\n✅ EMAIL SENT SUCCESSFULLY VIA SENDGRID!`);
     return { success: true, message: 'Email sent successfully' };
   } catch (error) {
     console.error('\n❌ EMAIL SENDING FAILED!');
-    console.error(`   Error Code: ${error.code}`);
     console.error(`   Error: ${error.message}`);
-    if (error.response) console.error(`   Response: ${error.response}`);
     return { success: false, error: error.message };
   }
 };
@@ -117,9 +103,9 @@ export const sendCredentialsEmail = async (email, name, admissionNumber, passwor
 export const sendApprovalNotificationEmail = async (email, name) => {
   try {
     console.log(`📧 Sending approval notification to: ${email}`);
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    const msg = {
       to: email,
+      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@knuniversity.com',
       subject: '✅ Your KNU Account Has Been Approved!',
       html: `
         <div style="font-family: Arial; max-width: 600px; margin: 0 auto;">
@@ -136,8 +122,8 @@ export const sendApprovalNotificationEmail = async (email, name) => {
       `
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ Approval notification sent to ${email}. Message ID: ${info.messageId}`);
+    await sgMail.send(msg);
+    console.log(`✅ Approval notification sent to ${email}`);
     return { success: true };
   } catch (error) {
     console.error('❌ Error sending approval email:', error.message);
@@ -148,9 +134,9 @@ export const sendApprovalNotificationEmail = async (email, name) => {
 export const sendRejectionEmail = async (email, name) => {
   try {
     console.log(`📧 Sending rejection email to: ${email}`);
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    const msg = {
       to: email,
+      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@knuniversity.com',
       subject: '❌ Your KNU Account Registration',
       html: `
         <div style="font-family: Arial; max-width: 600px; margin: 0 auto;">
@@ -166,8 +152,8 @@ export const sendRejectionEmail = async (email, name) => {
       `
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ Rejection email sent to ${email}. Message ID: ${info.messageId}`);
+    await sgMail.send(msg);
+    console.log(`✅ Rejection email sent to ${email}`);
     return { success: true };
   } catch (error) {
     console.error('❌ Error sending rejection email:', error.message);
@@ -179,15 +165,15 @@ export const sendRejectionEmail = async (email, name) => {
 export const sendEmail = async (to, subject, html) => {
   try {
     console.log(`📧 Sending email to: ${to}`);
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    const msg = {
       to: to,
+      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@knuniversity.com',
       subject: subject,
       html: html
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent to ${to}. Message ID: ${info.messageId}`);
+    await sgMail.send(msg);
+    console.log(`✅ Email sent to ${to}`);
     return { success: true };
   } catch (error) {
     console.error('❌ Error sending email:', error.message);
