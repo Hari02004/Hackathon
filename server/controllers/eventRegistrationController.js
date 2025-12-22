@@ -1,30 +1,32 @@
 import EventRegistration from '../models/EventRegistration.js';
 import Event from '../models/Event.js';
-import nodemailer from 'nodemailer';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Create email transporter
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER || 'hk03012004@gmail.com',
-    pass: process.env.EMAIL_PASSWORD || 'albsmjxtkuohdqzk'
-  }
-});
+// Initialize Brevo
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications['api-key'];
+apiKey.apiKey = process.env.BREVO_API_KEY;
 
-// Helper function to send email
+// Helper function to send email via Brevo
 const sendEmailHelper = async ({ to, subject, text }) => {
   try {
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER || 'hk03012004@gmail.com',
-      to,
-      subject,
-      text
-    });
+    const sendSmtpEmail = {
+      to: [{email: to}],
+      sender: {
+        name: 'KNU University',
+        email: process.env.EMAIL_USER || 'noreply@knuniversity.com'
+      },
+      subject: subject,
+      htmlContent: `<p>${text.replace(/\n/g, '<br>')}</p>`
+    };
+
+    const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+    await tranEmailApi.sendTransacEmail(sendSmtpEmail);
     console.log('✅ Email sent to:', to);
-    return info;
+    return { success: true };
   } catch (error) {
     console.error('❌ Error sending email:', error);
     throw error;
