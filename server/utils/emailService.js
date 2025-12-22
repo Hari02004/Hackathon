@@ -1,24 +1,29 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import sgMail from '@sendgrid/mail';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 
-// Initialize SendGrid with API key
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// Initialize Brevo (Sendinblue)
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications['api-key'];
+apiKey.apiKey = process.env.BREVO_API_KEY;
 
-console.log('📧 Email service configured for SendGrid');
-console.log('📧 From email:', process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER);
+console.log('✅ Email service configured for Brevo (FREE - 300 emails/day)');
+console.log('📧 From email:', process.env.EMAIL_USER || 'noreply@knuniversity.com');
 
 export const sendCredentialsEmail = async (email, name, admissionNumber, password) => {
   try {
-    console.log(`\n📧 SENDING EMAIL VIA SENDGRID...`);
+    console.log(`\n📧 SENDING EMAIL VIA BREVO...`);
     console.log(`   To: ${email}`);
     console.log(`   Student: ${name}`);
     
-    const msg = {
-      to: email,
-      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@knuniversity.com',
+    const sendSmtpEmail = {
+      to: [{email: email, name: name}],
+      sender: {
+        name: 'KNU University',
+        email: process.env.EMAIL_USER || 'noreply@knuniversity.com'
+      },
       subject: '🎓 Welcome to KNU - Your Account Credentials',
-      html: `
+      htmlContent: `
         <!DOCTYPE html>
         <html>
         <head>
@@ -90,8 +95,9 @@ export const sendCredentialsEmail = async (email, name, admissionNumber, passwor
       `
     };
 
-    await sgMail.send(msg);
-    console.log(`\n✅ EMAIL SENT SUCCESSFULLY VIA SENDGRID!`);
+    const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+    await tranEmailApi.sendTransacEmail(sendSmtpEmail);
+    console.log(`\n✅ EMAIL SENT SUCCESSFULLY VIA BREVO!`);
     return { success: true, message: 'Email sent successfully' };
   } catch (error) {
     console.error('\n❌ EMAIL SENDING FAILED!');
@@ -103,11 +109,14 @@ export const sendCredentialsEmail = async (email, name, admissionNumber, passwor
 export const sendApprovalNotificationEmail = async (email, name) => {
   try {
     console.log(`📧 Sending approval notification to: ${email}`);
-    const msg = {
-      to: email,
-      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@knuniversity.com',
+    const sendSmtpEmail = {
+      to: [{email: email, name: name}],
+      sender: {
+        name: 'KNU University',
+        email: process.env.EMAIL_USER || 'noreply@knuniversity.com'
+      },
       subject: '✅ Your KNU Account Has Been Approved!',
-      html: `
+      htmlContent: `
         <div style="font-family: Arial; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; padding: 20px; text-align: center;">
             <h2>Account Approved! ✅</h2>
@@ -122,7 +131,8 @@ export const sendApprovalNotificationEmail = async (email, name) => {
       `
     };
 
-    await sgMail.send(msg);
+    const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+    await tranEmailApi.sendTransacEmail(sendSmtpEmail);
     console.log(`✅ Approval notification sent to ${email}`);
     return { success: true };
   } catch (error) {
@@ -134,11 +144,14 @@ export const sendApprovalNotificationEmail = async (email, name) => {
 export const sendRejectionEmail = async (email, name) => {
   try {
     console.log(`📧 Sending rejection email to: ${email}`);
-    const msg = {
-      to: email,
-      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@knuniversity.com',
+    const sendSmtpEmail = {
+      to: [{email: email, name: name}],
+      sender: {
+        name: 'KNU University',
+        email: process.env.EMAIL_USER || 'noreply@knuniversity.com'
+      },
       subject: '❌ Your KNU Account Registration',
-      html: `
+      htmlContent: `
         <div style="font-family: Arial; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; padding: 20px; text-align: center;">
             <h2>Registration Update</h2>
@@ -152,7 +165,8 @@ export const sendRejectionEmail = async (email, name) => {
       `
     };
 
-    await sgMail.send(msg);
+    const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+    await tranEmailApi.sendTransacEmail(sendSmtpEmail);
     console.log(`✅ Rejection email sent to ${email}`);
     return { success: true };
   } catch (error) {
@@ -165,14 +179,18 @@ export const sendRejectionEmail = async (email, name) => {
 export const sendEmail = async (to, subject, html) => {
   try {
     console.log(`📧 Sending email to: ${to}`);
-    const msg = {
-      to: to,
-      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@knuniversity.com',
+    const sendSmtpEmail = {
+      to: [{email: to}],
+      sender: {
+        name: 'KNU University',
+        email: process.env.EMAIL_USER || 'noreply@knuniversity.com'
+      },
       subject: subject,
-      html: html
+      htmlContent: html
     };
 
-    await sgMail.send(msg);
+    const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+    await tranEmailApi.sendTransacEmail(sendSmtpEmail);
     console.log(`✅ Email sent to ${to}`);
     return { success: true };
   } catch (error) {
