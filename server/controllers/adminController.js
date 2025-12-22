@@ -86,36 +86,19 @@ export const approveStudent = async (req, res) => {
 
     console.log(`💾 User status updated to: approved`);
 
-    // Send email with credentials
-    console.log(`📧 Attempting to send credentials email...`);
-    const emailResult = await sendCredentialsEmail(
-      user.email,
-      user.name,
-      user.admissionNumber,
-      newPassword
-    );
-
-    console.log(`📧 Email result:`, emailResult);
-
-    // Log email
-    await EmailLog.create({
-      recipientEmail: user.email,
-      recipientName: user.name,
-      subject: 'Welcome to KNU - Your Account Credentials',
-      type: 'credentials',
-      status: emailResult.success ? 'sent' : 'failed',
-      sentBy: req.userId,
-      error: emailResult.error || null
-    });
+    // Send email in background (don't wait for it)
+    // This prevents timeout errors on Render's free tier
+    sendCredentialsEmailInBackground(user, newPassword, req.userId);
 
     res.json({
       success: true,
-      message: 'Student approved and credentials sent',
+      message: 'Student approved successfully! Credentials will be sent via email.',
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        status: user.status
+        status: user.status,
+        password: newPassword // Return password in response since email might fail
       }
     });
   } catch (error) {
@@ -126,6 +109,48 @@ export const approveStudent = async (req, res) => {
     });
   }
 };
+
+// Helper function to send email in background
+async function sendCredentialsEmailInBackground(user, newPassword, approvedBy) {
+  try {
+    console.log(`📧 Attempting to send credentials email in background...`);
+    const emailResult = await sendCredentialsEmail(
+      user.email,
+      user.name,
+      user.admissionNumber,
+      newPassword
+    );
+
+    console.log(`📧 Email result:`, emailResult);
+
+    // Log email result
+    await EmailLog.create({
+      recipientEmail: user.email,
+      recipientName: user.name,
+      subject: 'Welcome to KNU - Your Account Credentials',
+      type: 'credentials',
+      status: emailResult.success ? 'sent' : 'failed',
+      sentBy: approvedBy,
+      error: emailResult.error || null
+    });
+  } catch (error) {
+    console.error('❌ Background email sending error:', error.message);
+    // Log this as a failed email attempt
+    try {
+      await EmailLog.create({
+        recipientEmail: user.email,
+        recipientName: user.name,
+        subject: 'Welcome to KNU - Your Account Credentials',
+        type: 'credentials',
+        status: 'failed',
+        sentBy: approvedBy,
+        error: error.message
+      });
+    } catch (logError) {
+      console.error('❌ Could not log email error:', logError.message);
+    }
+  }
+}
 
 // Reject student
 export const rejectStudent = async (req, res) => {
@@ -240,35 +265,22 @@ export const addUser = async (req, res) => {
       // Don't fail the whole operation if admission number creation fails
     }
 
-    // Only send email if approved
-    if (status === 'approved') {
-      const emailResult = await sendCredentialsEmail(
-        user.email,
-        user.name,
-        user.admissionNumber,
-        password
-      );
-
-      await EmailLog.create({
-        recipientEmail: user.email,
-        recipientName: user.name,
-        subject: 'Welcome to KNU - Your Account Credentials',
-        type: 'credentials',
-        status: emailResult.success ? 'sent' : 'failed',
-        sentBy: req.userId
-      });
+    // Only send email if approved (send in background)
+    if (status === 'approved' && email) {
+      sendCredentialsEmailInBackground(user, password, req.userId);
     }
 
     res.status(201).json({
       success: true,
-      message: 'User added successfully' + (status === 'approved' ? ' and credentials sent' : ''),
+      message: 'User added successfully' + (status === 'approved' ? ' and credentials will be sent via email' : ''),
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
         admissionNumber: user.admissionNumber,
         role: user.role,
-        status: user.status
+        status: user.status,
+        password: status === 'approved' ? password : undefined // Show password if approved
       }
     });
   } catch (error) {
