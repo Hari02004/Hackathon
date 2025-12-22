@@ -33,7 +33,7 @@ const Events = () => {
         const userStr = localStorage.getItem('currentUser');
         if (userStr) {
           const user = JSON.parse(userStr);
-          const response = await fetch(`http://localhost:5000/api/event-registrations/user/${user.email}`);
+          const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/event-registrations/user/${user.email}`);
           const data = await response.json();
           if (data.success) {
             setUserRegistrations(data.registrations || []);
@@ -83,7 +83,7 @@ const Events = () => {
     // Fetch events from backend API
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/events');
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/events`);
         const data = await response.json();
         if (data.success && data.events) {
           const eventsWithStatus = data.events.map(event => ({
@@ -921,7 +921,7 @@ const Events = () => {
 
                     console.log('📤 Sending registration payload:', JSON.stringify(payload, null, 2));
 
-                    const response = await fetch('http://localhost:5000/api/event-registrations/register', {
+                    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/event-registrations/register`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json'

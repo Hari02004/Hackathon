@@ -23,7 +23,7 @@ function EventRegistrationsManager() {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/events');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/events`);
       const data = await response.json();
       if (data.success) {
         setEvents(data.events || []);
@@ -36,7 +36,7 @@ function EventRegistrationsManager() {
   const fetchRegistrations = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/event-registrations/admin/all', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/event-registrations/admin/all`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -53,7 +53,7 @@ function EventRegistrationsManager() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/event-registrations/admin/stats', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/event-registrations/admin/stats`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -91,7 +91,7 @@ function EventRegistrationsManager() {
 
   const handleStatusChange = async (registration, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/event-registrations/admin/${registration._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/event-registrations/admin/${registration._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -120,9 +120,10 @@ function EventRegistrationsManager() {
 
   const handleExportCSV = async (eventId) => {
     try {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const url = eventId
-        ? `http://localhost:5000/api/event-registrations/admin/export/${eventId}`
-        : 'http://localhost:5000/api/event-registrations/admin/export/';
+        ? `${baseUrl}/api/event-registrations/admin/export/${eventId}`
+        : `${baseUrl}/api/event-registrations/admin/export/`;
 
       const response = await fetch(url, {
         headers: {

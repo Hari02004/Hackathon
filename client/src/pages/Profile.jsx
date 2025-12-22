@@ -57,7 +57,7 @@ const Profile = () => {
         phone: editData.phone
       };
       
-      const response = await fetch(`http://localhost:5000/api/users/update-profile`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/users/update-profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

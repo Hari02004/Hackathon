@@ -16,7 +16,7 @@ const News = () => {
     // Fetch news from backend API
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/news');
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/news`);
         const data = await response.json();
         setNews(data);
         setFilteredNews(data);
