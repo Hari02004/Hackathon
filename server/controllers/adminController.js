@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import DeletedAdmission from '../models/DeletedAdmission.js';
 import EmailLog from '../models/EmailLog.js';
 import Registration from '../models/Registration.js';
+import AdmissionNumber from '../models/AdmissionNumber.js';
 import { generateRandomPassword } from '../utils/tokenUtils.js';
 import { sendCredentialsEmail, sendApprovalNotificationEmail, sendRejectionEmail } from '../utils/emailService.js';
 
@@ -176,7 +177,7 @@ export const addUser = async (req, res) => {
       });
     }
 
-    // Check existing
+    // Check existing in User collection
     const query = email 
       ? { $or: [{ email }, { admissionNumber }] }
       : { admissionNumber };
@@ -187,6 +188,18 @@ export const addUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Email or admission number already exists'
+      });
+    }
+
+    // Also check if admission number exists in AdmissionNumber collection
+    const existingAdmission = await AdmissionNumber.findOne({
+      admissionNumber: admissionNumber.toUpperCase()
+    });
+
+    if (existingAdmission) {
+      return res.status(400).json({
+        success: false,
+        message: 'Admission number already exists'
       });
     }
 
@@ -211,6 +224,21 @@ export const addUser = async (req, res) => {
     });
 
     console.log('✅ User created with status:', user.status);
+
+    // IMPORTANT: Also create an AdmissionNumber record for student signup verification
+    try {
+      await AdmissionNumber.create({
+        admissionNumber: admissionNumber.toUpperCase(),
+        studentName: name,
+        department: department || 'Computer Science',
+        batch: batch || 'Unknown',
+        rollNumber: admissionNumber.toUpperCase()
+      });
+      console.log('✅ AdmissionNumber record created for verification');
+    } catch (admissionError) {
+      console.error('⚠️ Error creating AdmissionNumber record:', admissionError.message);
+      // Don't fail the whole operation if admission number creation fails
+    }
 
     // Only send email if approved
     if (status === 'approved') {
