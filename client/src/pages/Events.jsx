@@ -426,6 +426,11 @@ const Events = () => {
                       
                       <button 
                         onClick={() => {
+                          const userStr = localStorage.getItem('currentUser');
+                          if (!userStr) {
+                            alert('Please login first to register for events');
+                            return;
+                          }
                           setSelectedEvent(event);
                           setShowRegistrationModal(true);
                           setRegistrationMessage('');
@@ -563,6 +568,11 @@ const Events = () => {
                       {event.status === 'upcoming' && (
                         <button 
                           onClick={() => {
+                            const userStr = localStorage.getItem('currentUser');
+                            if (!userStr) {
+                              alert('Please login first to register for events');
+                              return;
+                            }
                             setSelectedEvent(event);
                             setShowRegistrationModal(true);
                             setRegistrationMessage('');
